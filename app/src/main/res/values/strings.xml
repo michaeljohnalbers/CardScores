@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Card Scores</string>
+    <string name="new_game">New Game</string>
+    <string name="continue_game">Continue Game</string>
+    <string name="view_saved_games">View Saved Games</string>
+</resources>
