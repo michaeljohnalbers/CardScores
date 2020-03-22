@@ -7,7 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.children
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.cardscores.support.Game
+import com.example.cardscores.support.PlayerList
 import java.util.logging.Logger
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +45,7 @@ class NewGameFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnC
     // TODO: display recommended number of decks (varies by player count)
     // TODO: fix placement of "Start Game" button when lots of players and keyboard is displayed
     // TODO: restore state if back button used
+    // TODO: disable player add for Gin (maybe support 3-way gin later)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -154,6 +159,30 @@ class NewGameFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnC
         }
 
         if (canProceed) {
+            val navController : NavController = Navigation.findNavController(activity as FragmentActivity, R.id.nav_host_fragment)
+
+            val playerList : PlayerList = PlayerList()
+            for (child in playerListViewGroup.children) {
+                playerList.addPlayer(child.findViewById<EditText>(R.id.PlayerName).text.toString())
+            }
+
+            when (gameSpinner.selectedItem as Game) {
+                Game._3_14 -> {
+                    val action = NewGameFragmentDirections.actionNewGameFragmentTo314Game(playerList)
+                    navController.navigate(action)
+                }
+                Game.GinRummy -> {
+                    val action = NewGameFragmentDirections.actionNewGameFragmentToGinRummyGame(playerList)
+                    navController.navigate(action)
+                }
+                Game.ShanghaiRummy -> {
+                    val action = NewGameFragmentDirections.actionNewGameFragmentToShanghaiRummyGame(playerList)
+                    navController.navigate(action)
+                }
+                else -> {
+                    throw IllegalStateException("Unhandled game in start game: ${gameSpinner.selectedItem}.")
+                }
+            }
             logger.info("Do some navigation here")
         }
     }

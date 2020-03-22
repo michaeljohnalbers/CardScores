@@ -7,11 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.example.cardscores.R
 import java.util.logging.Logger
 
@@ -43,9 +42,9 @@ class MainFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         if (view != null) {
             when (view.id) {
-                R.id.NewGameButton -> newGame(view)
-                R.id.ContinueGameButton -> continueGame(view)
-                R.id.ViewSavedGamesButton -> viewSavedGames(view)
+                R.id.NewGameButton -> newGame()
+                R.id.ContinueGameButton -> continueGame()
+                R.id.ViewSavedGamesButton -> viewSavedGames()
                 else -> {
                     throw IllegalArgumentException("Unhandled view ID provided: ${view.id}")
                 }
@@ -62,7 +61,7 @@ class MainFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun newGame(view: View) {
+    private fun newGame() {
         logger.info("New Game")
         val action = MainFragmentDirections.actionMainFragmentToNewGameFragment()
         val navController : NavController = Navigation.findNavController(activity as FragmentActivity, R.id.nav_host_fragment)
@@ -71,11 +70,12 @@ class MainFragment : Fragment(), View.OnClickListener {
         //navController.navigate(R.id.newGameFragment)
     }
 
-    private fun continueGame(view: View) {
-        logger.info("Continue Game")
+    // TODO: geotag (optional) + timestamp game
+    private fun continueGame() {
+        Toast.makeText(context, "Continue Game coming soon!", Toast.LENGTH_SHORT).show()
     }
 
-    private fun viewSavedGames(view: View) {
-        logger.info("View Saved Games")
+    private fun viewSavedGames() {
+        Toast.makeText(context, "View Saved Games coming soon!", Toast.LENGTH_SHORT).show()
     }
 }
