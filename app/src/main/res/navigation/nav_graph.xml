@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.cardscores.ui.main.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_newGameFragment"
+            app:destination="@id/newGameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newGameFragment"
+        android:name="com.example.cardscores.NewGameFragment"
+        android:label="fragment_new_game"
+        tools:layout="@layout/fragment_new_game" >
+        <action
+            android:id="@+id/action_newGameFragment_to__314Game"
+            app:destination="@id/_314Game" />
+        <action
+            android:id="@+id/action_newGameFragment_to_shanghaiRummyGame"
+            app:destination="@id/shanghaiRummyGame" />
+        <action
+            android:id="@+id/action_newGameFragment_to_ginRummyGame"
+            app:destination="@id/ginRummyGame" />
+    </fragment>
+    <fragment
+        android:id="@+id/_314Game"
+        android:name="com.example.cardscores.ThreeFourteenGame"
+        android:label="fragment__314_game"
+        tools:layout="@layout/fragment__314_game" >
+        <argument
+            android:name="PlayerList"
+            app:argType="com.example.cardscores.support.PlayerList" />
+    </fragment>
+    <fragment
+        android:id="@+id/shanghaiRummyGame"
+        android:name="com.example.cardscores.ShanghaiRummyGame"
+        android:label="fragment_shanghai_rummy_game"
+        tools:layout="@layout/fragment_shanghai_rummy_game" >
+        <argument
+            android:name="PlayerList"
+            app:argType="com.example.cardscores.support.PlayerList" />
+    </fragment>
+    <fragment
+        android:id="@+id/ginRummyGame"
+        android:name="com.example.cardscores.GinRummyGame"
+        android:label="fragment_gin_rummy_game"
+        tools:layout="@layout/fragment_gin_rummy_game" >
+        <argument
+            android:name="PlayerList"
+            app:argType="com.example.cardscores.support.PlayerList" />
+    </fragment>
+</navigation>

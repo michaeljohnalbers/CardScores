@@ -2,37 +2,38 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.main.MainFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/TitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="128dp"
         android:text="@string/app_name"
-        android:textAlignment="center"
         android:textSize="36sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/NewGameButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/NewGameButton"
-        android:layout_width="97dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
         android:text="@string/new_game"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="224dp" />
+        app:layout_constraintEnd_toEndOf="@+id/TitleTextView"
+        app:layout_constraintStart_toStartOf="@+id/TitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/TitleTextView" />
 
     <Button
         android:id="@+id/ContinueGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/continue_game"
         app:layout_constraintEnd_toEndOf="@+id/NewGameButton"
         app:layout_constraintStart_toStartOf="@+id/NewGameButton"
@@ -42,7 +43,7 @@
         android:id="@+id/ViewSavedGamesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/view_saved_games"
         app:layout_constraintEnd_toEndOf="@+id/ContinueGameButton"
         app:layout_constraintStart_toStartOf="@+id/ContinueGameButton"
