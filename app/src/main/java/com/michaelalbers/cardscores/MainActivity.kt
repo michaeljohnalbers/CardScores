@@ -1,4 +1,4 @@
-package com.example.cardscores
+package com.michaelalbers.cardscores
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

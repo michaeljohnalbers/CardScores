@@ -1,4 +1,4 @@
-package com.example.cardscores.ui.main
+package com.michaelalbers.cardscores.ui.main
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.cardscores.R
+import com.michaelalbers.cardscores.R
 import java.util.logging.Logger
 
 class MainFragment : Fragment(), View.OnClickListener {

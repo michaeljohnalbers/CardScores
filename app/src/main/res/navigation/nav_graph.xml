@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.cardscores.ui.main.MainFragment"
+        android:name="com.michaelalbers.cardscores.ui.main.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/newGameFragment"
-        android:name="com.example.cardscores.NewGameFragment"
+        android:name="com.michaelalbers.cardscores.NewGameFragment"
         android:label="fragment_new_game"
         tools:layout="@layout/fragment_new_game" >
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/_314Game"
-        android:name="com.example.cardscores.ThreeFourteenGame"
+        android:name="com.michaelalbers.cardscores.ThreeFourteenGame"
         android:label="fragment__314_game"
         tools:layout="@layout/fragment__314_game" >
         <argument
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/shanghaiRummyGame"
-        android:name="com.example.cardscores.ShanghaiRummyGame"
+        android:name="com.michaelalbers.cardscores.ShanghaiRummyGame"
         android:label="fragment_shanghai_rummy_game"
         tools:layout="@layout/fragment_shanghai_rummy_game" >
         <argument
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/ginRummyGame"
-        android:name="com.example.cardscores.GinRummyGame"
+        android:name="com.michaelalbers.cardscores.GinRummyGame"
         android:label="fragment_gin_rummy_game"
         tools:layout="@layout/fragment_gin_rummy_game" >
         <argument

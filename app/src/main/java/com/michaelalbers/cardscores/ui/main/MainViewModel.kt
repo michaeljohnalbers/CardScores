@@ -1,4 +1,4 @@
-package com.example.cardscores.ui.main
+package com.michaelalbers.cardscores.ui.main
 
 import androidx.lifecycle.ViewModel
 

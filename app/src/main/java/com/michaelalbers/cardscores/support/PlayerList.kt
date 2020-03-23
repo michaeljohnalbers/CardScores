@@ -1,4 +1,4 @@
-package com.example.cardscores.support
+package com.michaelalbers.cardscores.support
 
 import android.os.Parcel
 import android.os.Parcelable

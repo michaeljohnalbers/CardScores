@@ -1,4 +1,4 @@
-package com.example.cardscores.support
+package com.michaelalbers.cardscores.support
 
 enum class Game(val readableName:String, val minPlayers:Int, val maxPlayers:Int) {
     _3_14("3-14", 3, 6),

@@ -1,4 +1,4 @@
-package com.example.cardscores
+package com.michaelalbers.cardscores
 
 import android.os.Bundle
 import android.text.InputType
@@ -12,7 +12,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.view.setPadding
 import androidx.navigation.fragment.navArgs
-import com.example.cardscores.support.Game
+import com.michaelalbers.cardscores.support.Game
 
 /**
  * A simple [Fragment] subclass.

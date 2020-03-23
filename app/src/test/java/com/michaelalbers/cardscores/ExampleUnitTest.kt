@@ -1,4 +1,4 @@
-package com.example.cardscores
+package com.michaelalbers.cardscores
 
 import org.junit.Test
 
