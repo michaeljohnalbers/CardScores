@@ -1,51 +1,42 @@
 package com.michaelalbers.cardscores
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.michaelalbers.cardscores.model.v1.NewGame
 import com.michaelalbers.cardscores.support.Game
 import com.michaelalbers.cardscores.support.PlayerList
+import com.michaelalbers.cardscores.viewmodel.v1.NewGameViewModel
 import java.util.logging.Logger
-
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
  * Use the [NewGameFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class NewGameFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnClickListener {
+class NewGameFragment : Fragment() {
 
     private val logger: Logger = Logger.getLogger(NewGameFragment::class.java.simpleName)
 
     private lateinit var gameSpinner: Spinner
     private lateinit var playerListViewGroup: ViewGroup
     private lateinit var addPlayerButton: View
+    private lateinit var newGameViewModel: NewGameViewModel
 
-//    private var param1: String? = null
-//    private var param2: String? = null
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
 
     // TODO: display recommended number of decks (varies by player count)
     // TODO: fix placement of "Start Game" button when lots of players and keyboard is displayed
     // TODO: restore state if back button used
-    // TODO: disable player add for Gin (maybe support 3-way gin later)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,17 +45,27 @@ class NewGameFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnC
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_new_game, container, false)
 
+        newGameViewModel = ViewModelProviders.of(this).get(NewGameViewModel::class.java)
+
+        newGameViewModel.getNewGame().observe(this, Observer {newGame ->
+            updatePlayerList(newGame)
+        })
+
         gameSpinner = view.findViewById(R.id.GameSelectionSpinner)
         playerListViewGroup = view.findViewById(R.id.PlayerListLayout)
         addPlayerButton = view.findViewById(R.id.AddPlayerButton)
 
-        gameSpinner.onItemSelectedListener = this
+        gameSpinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                newGameViewModel.setGame(parent?.getItemAtPosition(position) as Game)
+            }
+        }
+
         gameSpinner.adapter = ArrayAdapter(requireContext(), R.layout.support_simple_spinner_dropdown_item, Game.values())
 
-        updatePlayerListForGameSelection()
-
-        addPlayerButton.setOnClickListener(this)
-        view.findViewById<Button>(R.id.StartGameButton).setOnClickListener(this)
+        addPlayerButton.setOnClickListener { newGameViewModel.addPlayer() }
+        view.findViewById<Button>(R.id.StartGameButton).setOnClickListener { startGame() }
 
         return view
     }
@@ -72,101 +73,91 @@ class NewGameFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnC
     companion object {
         @JvmStatic
         fun newInstance() = NewGameFragment()
-//        fun newInstance(param1: String, param2: String) =
-//            NewGameFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        logger.info("Nothing selected from spinner")
-    }
+    /**
+     * Update the player widgets. This function has to handle a lot of cases:
+     * * Drawing the initial set of widgets
+     * * Screen rotation
+     * * Correctly updating player's names
+     * * Adding/removing players
+     * * Changing games
+     * * Maybe more
+     *
+     * That's a long way of saying, if you think you can remove a bit of code, give it a
+     * thorough testing first.
+     */
+    private fun updatePlayerList(newGame: NewGame) {
+        for ((ii, player) in newGame.players.withIndex()) {
+            var playerNameEditText: EditText
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        updatePlayerListForGameSelection()
-    }
+            if (playerListViewGroup.childCount <= ii) {
+                val newPlayerView : View = layoutInflater.inflate(R.layout.player_entry, null);
+                playerNameEditText = newPlayerView.findViewById(R.id.PlayerName)
+                playerNameEditText.addTextChangedListener(object : TextWatcher{
+                    override fun afterTextChanged(s: Editable?) {
+                        if (s != null) {
+                            newGameViewModel.setPlayerName(ii, s.toString())
+                        }
+                    }
 
-    override fun onClick(v: View?) {
-        if (v != null) {
-            when (v.id) {
-                R.id.AddPlayerButton -> addPlayer()
-                R.id.StartGameButton -> startGame()
-                else -> {
-                    throw IllegalArgumentException("Unhandled view ID provided: ${v.id}")
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                })
+
+                val removeButton = newPlayerView.findViewById<Button>(R.id.RemovePlayerButton)
+                if (ii < newGame.game.minPlayers) {
+                    removeButton.visibility = View.GONE
                 }
+                removeButton.setOnClickListener { newGameViewModel.removePlayer(ii) }
+
+                playerListViewGroup.addView(newPlayerView)
+            }
+            else {
+                playerNameEditText = playerListViewGroup.getChildAt(ii).findViewById(R.id.PlayerName)
+            }
+
+            // Without this check the cursor was being set at the beginning of the text entry
+            if (playerNameEditText.text.toString() != player) {
+                playerNameEditText.setText(player)
             }
         }
-    }
 
-    private fun updatePlayerListForGameSelection() {
-        val currentGame = gameSpinner.selectedItem as Game
-        logger.info("Game: ${gameSpinner.selectedItem}, Current players: ${playerListViewGroup.childCount}, min/max: ${currentGame.minPlayers}/${currentGame.maxPlayers}")
-
-        while (playerListViewGroup.childCount < currentGame.minPlayers) {
-            addPlayer(false)
-        }
-
-        while (playerListViewGroup.childCount > currentGame.maxPlayers) {
-            playerListViewGroup.removeViewAt(playerListViewGroup.childCount-1)
-        }
-
-        if (playerListViewGroup.childCount < currentGame.maxPlayers) {
-            view?.findViewById<Button>(R.id.AddPlayerButton)?.visibility = View.VISIBLE
-        }
-    }
-
-    private fun addPlayer() {
-        addPlayer(true)
-        setAddPlayerButtonVisiblity()
-    }
-
-    private fun addPlayer(canRemove: Boolean) {
-        val newPlayerView : View = layoutInflater.inflate(R.layout.player_entry, null);
-        val removeButton = newPlayerView.findViewById<Button>(R.id.RemovePlayerButton)
-        if (! canRemove) {
-            removeButton.visibility = View.GONE
-        }
-        removeButton.setOnClickListener {
-            playerListViewGroup.removeView(newPlayerView)
-            setAddPlayerButtonVisiblity()
-        }
-        playerListViewGroup.addView(newPlayerView)
-    }
-
-    private fun setAddPlayerButtonVisiblity() {
-        val currentGame = gameSpinner.selectedItem as Game
-        if (playerListViewGroup.childCount >= currentGame.maxPlayers) {
-            addPlayerButton.visibility = View.INVISIBLE
+        if (newGame.canAddNewPlayer()) {
+            addPlayerButton.visibility = View.VISIBLE
         }
         else {
-            addPlayerButton.visibility = View.VISIBLE
+            addPlayerButton.visibility = View.INVISIBLE
+        }
+
+        while (playerListViewGroup.childCount > newGame.players.size) {
+            playerListViewGroup.removeViewAt(playerListViewGroup.childCount-1)
         }
     }
 
     private fun startGame() {
+        val newGame = newGameViewModel.getNewGame().value ?: return
+
         var canProceed = true
-        for (child in playerListViewGroup.children) {
-            if (child.findViewById<EditText>(R.id.PlayerName).text.toString() == "") {
+        val playerList = PlayerList()
+        for (player in newGame.players) {
+            if (player == "") {
                 canProceed = false
                 Toast.makeText(requireContext(),
-                    "Please enter all of the players names before starting a game.",
-                        Toast.LENGTH_SHORT)
-                    .show()
+                    "Please enter all of the players' names before starting a game.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                break
+            }
+            else {
+                playerList.addPlayer(player)
             }
         }
 
         if (canProceed) {
             val navController : NavController = Navigation.findNavController(activity as FragmentActivity, R.id.nav_host_fragment)
 
-            val playerList : PlayerList = PlayerList()
-            for (child in playerListViewGroup.children) {
-                playerList.addPlayer(child.findViewById<EditText>(R.id.PlayerName).text.toString())
-            }
-
-            when (gameSpinner.selectedItem as Game) {
+            when (newGame.game) {
                 Game._3_14 -> {
                     val action = NewGameFragmentDirections.actionNewGameFragmentTo314Game(playerList)
                     navController.navigate(action)
@@ -180,10 +171,9 @@ class NewGameFragment : Fragment(), AdapterView.OnItemSelectedListener, View.OnC
                     navController.navigate(action)
                 }
                 else -> {
-                    throw IllegalStateException("Unhandled game in start game: ${gameSpinner.selectedItem}.")
+                    throw IllegalStateException("Unhandled game in start game: ${newGame.game}.")
                 }
             }
-            logger.info("Do some navigation here")
         }
     }
 }

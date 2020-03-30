@@ -3,6 +3,7 @@ package com.michaelalbers.cardscores.support
 enum class Game(val readableName:String, val minPlayers:Int, val maxPlayers:Int) {
     _3_14("3-14", 3, 6),
     ShanghaiRummy("Shanghai Rummy", 3, 6),
+    // TODO: maybe support 3-way gin later
     GinRummy("Gin Rummy", 2, 2);
 
     override fun toString(): String {

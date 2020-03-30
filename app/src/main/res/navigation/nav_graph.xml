@@ -36,7 +36,7 @@
         tools:layout="@layout/fragment__314_game" >
         <argument
             android:name="PlayerList"
-            app:argType="com.example.cardscores.support.PlayerList" />
+            app:argType="com.michaelalbers.cardscores.support.PlayerList" />
     </fragment>
     <fragment
         android:id="@+id/shanghaiRummyGame"
@@ -45,7 +45,7 @@
         tools:layout="@layout/fragment_shanghai_rummy_game" >
         <argument
             android:name="PlayerList"
-            app:argType="com.example.cardscores.support.PlayerList" />
+            app:argType="com.michaelalbers.cardscores.support.PlayerList" />
     </fragment>
     <fragment
         android:id="@+id/ginRummyGame"
@@ -54,6 +54,6 @@
         tools:layout="@layout/fragment_gin_rummy_game" >
         <argument
             android:name="PlayerList"
-            app:argType="com.example.cardscores.support.PlayerList" />
+            app:argType="com.michaelalbers.cardscores.support.PlayerList" />
     </fragment>
 </navigation>
