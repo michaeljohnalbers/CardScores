@@ -157,6 +157,8 @@ class NewGameFragment : Fragment() {
         if (canProceed) {
             val navController : NavController = Navigation.findNavController(activity as FragmentActivity, R.id.nav_host_fragment)
 
+            // TODO: make sure the keyboard is closed
+
             when (newGame.game) {
                 Game._3_14 -> {
                     val action = NewGameFragmentDirections.actionNewGameFragmentTo314Game(playerList)
